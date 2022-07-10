@@ -39,16 +39,32 @@ router.delete('/:id', async (req, res) => {
 
 //ユーザー情報の取得
 //第三者もツイート情報を取得するためifは不要
-router.get('/:id', async (req, res) => {
-        try {
-            const user = await User.findById(req.params.id);  //queryのidと一致するユーザー情報を取得
+// router.get('/:id', async (req, res) => {
+//         try {
+//             const user = await User.findById(req.params.id);  //queryのidと一致するユーザー情報を取得
+//             const { password, updatedAt, ...other } = user._doc;  //パスワードと更新日時はみられてはいけないので分割代入して取り除く
+//             return res.status(200).json(other);
+//         } catch (err) {
+//             return res.status(500).json(err);
+//         }
+// });
+
+//クエリを使ってユーザー情報を取得
+router.get('/', async (req, res) => {
+    const userId = req.query.userId;   //クエリ情報を取得する
+    const username = req.query.username;
+
+    try {
+        const user = userId
+            ? await User.findById(userId)
+            : await User.findOne({ username: username });
+
             const { password, updatedAt, ...other } = user._doc;  //パスワードと更新日時はみられてはいけないので分割代入して取り除く
-            res.status(200).json(other);
+            return res.status(200).json(other);
         } catch (err) {
             return res.status(500).json(err);
         }
 });
-
 
 //ユーザーのフォロー
 router.put('/:id/follow', async (req, res) => {

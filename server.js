@@ -6,7 +6,7 @@ const postRoute = require('./routes/posts');
 const mongoose = require('mongoose');
 require('dotenv').config();
  
-const PORT = 3000;
+const PORT = 3001;  //フロントとバックエンドでポートが競合するので分ける
 
 //データベース接続
 mongoose.connect(process.env.MONGO_URL)
